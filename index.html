@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BizPilot — Your business runs itself.</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:      #07080d;
+  --bg2:     #0c0d15;
+  --surface: #10111c;
+  --border:  rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.12);
+  --text:    #eceef8;
+  --muted:   #7a7f9a;
+  --faint:   #3a3e55;
+  --accent:  #5b8fff;
+  --accent2: #7aaaff;
+  --lime:    #b6f542;
+  --lime2:   #c9f76a;
+  --red:     #ff5f57;
+  --display: 'Bricolage Grotesque', sans-serif;
+  --serif:   'Instrument Serif', Georgia, serif;
+  --mono:    'DM Mono', monospace;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--display);
+  font-size:16px;
+  line-height:1.65;
+  overflow-x:hidden;
+}
+
+/* ── noise overlay ── */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.5;
+}
+
+/* ── nav ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 52px;
+  background:rgba(7,8,13,0.8);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:var(--display);
+  font-size:19px;font-weight:800;
+  letter-spacing:-0.5px;
+  display:flex;align-items:center;gap:8px;
+}
+.logo-dot{
+  width:8px;height:8px;
+  background:var(--lime);
+  border-radius:50%;
+  animation:blink 2s infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.nav-pill{
+  background:var(--lime);
+  color:#07080d;
+  padding:10px 24px;
+  border-radius:100px;
+  font-size:13px;font-weight:700;
+  text-decoration:none;
+  letter-spacing:0.2px;
+  transition:all 0.2s;
+}
+.nav-pill:hover{background:var(--lime2);transform:translateY(-1px);}
+
+/* ── hero ── */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:140px 52px 80px;
+  max-width:1180px;margin:0 auto;
+  position:relative;z-index:1;
+}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--mono);
+  font-size:12px;font-weight:500;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--lime);
+  margin-bottom:36px;
+  animation:fadeUp 0.6s ease both;
+}
+.hero-eyebrow::before{
+  content:'';
+  width:32px;height:1px;
+  background:var(--lime);
+}
+
+.hero-h1{
+  font-family:var(--display);
+  font-size:clamp(52px,7.5vw,108px);
+  font-weight:800;
+  line-height:0.95;
+  letter-spacing:-4px;
+  margin-bottom:32px;
+  animation:fadeUp 0.6s 0.1s ease both;
+}
+.hero-h1 .outline{
+  -webkit-text-stroke:1px rgba(255,255,255,0.25);
+  color:transparent;
+}
+.hero-h1 .italic{
+  font-family:var(--serif);
+  font-weight:400;
+  font-style:italic;
+  color:var(--accent2);
+  letter-spacing:-2px;
+}
+
+.hero-body{
+  font-size:18px;
+  color:var(--muted);
+  max-width:500px;
+  line-height:1.75;
+  margin-bottom:44px;
+  font-weight:400;
+  animation:fadeUp 0.6s 0.2s ease both;
+}
+
+.hero-actions{
+  display:flex;gap:14px;flex-wrap:wrap;
+  animation:fadeUp 0.6s 0.3s ease both;
+}
+.btn-lime{
+  background:var(--lime);color:#07080d;
+  padding:14px 32px;border-radius:100px;
+  font-size:15px;font-weight:700;
+  text-decoration:none;transition:all 0.2s;
+  letter-spacing:0.2px;
+}
+.btn-lime:hover{background:var(--lime2);transform:translateY(-2px);box-shadow:0 12px 40px rgba(182,245,66,0.2);}
+.btn-outline{
+  background:transparent;color:var(--text);
+  padding:14px 32px;border-radius:100px;
+  font-size:15px;font-weight:500;
+  text-decoration:none;
+  border:1px solid var(--border2);
+  transition:all 0.2s;
+}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent2);}
+
+/* ── hero visual ── */
+.hero-visual{
+  position:absolute;
+  right:52px;top:50%;transform:translateY(-50%);
+  width:420px;
+  animation:fadeUp 0.6s 0.4s ease both;
+}
+.mockup-window{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 40px 120px rgba(0,0,0,0.6), 0 0 0 1px var(--border);
+}
+.mockup-bar{
+  background:var(--bg2);
+  padding:12px 18px;
+  display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--border);
+}
+.dot-r{width:10px;height:10px;border-radius:50%;background:#ff5f57;}
+.dot-y{width:10px;height:10px;border-radius:50%;background:#ffbd2e;}
+.dot-g{width:10px;height:10px;border-radius:50%;background:#28ca41;}
+.mockup-title{font-family:var(--mono);font-size:11px;color:var(--faint);margin-left:8px;}
+.mockup-body{padding:20px;}
+.wa-msg{
+  display:flex;gap:10px;align-items:flex-start;
+  margin-bottom:14px;
+}
+.wa-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,#25d366,#128c7e);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;
+}
+.wa-bubble{
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);
+  border-radius:4px 12px 12px 12px;
+  padding:10px 14px;
+  font-size:13px;color:var(--text);
+  line-height:1.5;
+  flex:1;
+}
+.wa-time{font-size:10px;color:var(--faint);margin-top:4px;text-align:right;}
+
+.ai-response{
+  background:rgba(91,143,255,0.08);
+  border:1px solid rgba(91,143,255,0.2);
+  border-radius:12px;
+  padding:14px 16px;
+  margin-bottom:14px;
+}
+.ai-label{
+  font-family:var(--mono);
+  font-size:10px;color:var(--accent2);
+  letter-spacing:1px;text-transform:uppercase;
+  margin-bottom:8px;display:flex;align-items:center;gap:6px;
+}
+.ai-dot{
+  width:6px;height:6px;background:var(--accent);border-radius:50%;
+  animation:pulse2 1.5s infinite;
+}
+@keyframes pulse2{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.ai-intent{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(182,245,66,0.1);
+  border:1px solid rgba(182,245,66,0.2);
+  color:var(--lime);
+  padding:3px 10px;border-radius:20px;
+  font-size:11px;font-weight:600;
+  margin-bottom:8px;
+}
+.ai-text{font-size:13px;color:var(--muted);line-height:1.5;}
+
+.action-btns{display:flex;gap:8px;margin-top:12px;}
+.act-btn{
+  flex:1;padding:8px 10px;border-radius:8px;
+  font-size:11px;font-weight:600;text-align:center;
+  cursor:pointer;border:none;font-family:var(--display);
+}
+.act-1{background:var(--lime);color:#07080d;}
+.act-2{background:rgba(255,255,255,0.06);color:var(--muted);border:1px solid var(--border);}
+.act-3{background:rgba(255,255,255,0.06);color:var(--muted);border:1px solid var(--border);}
+
+/* ── marquee ── */
+.marquee-wrap{
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--bg2);
+  padding:16px 0;overflow:hidden;
+  position:relative;z-index:1;
+}
+.marquee-track{
+  display:flex;gap:0;
+  animation:marquee 30s linear infinite;
+  width:max-content;
+}
+.marquee-item{
+  display:flex;align-items:center;gap:12px;
+  padding:0 40px;
+  font-family:var(--mono);
+  font-size:12px;font-weight:500;
+  color:var(--faint);
+  letter-spacing:1px;text-transform:uppercase;
+  border-right:1px solid var(--border);
+  white-space:nowrap;
+}
+.marquee-item span{color:var(--lime);font-size:16px;}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ── sections ── */
+.section{padding:110px 0;position:relative;z-index:1;}
+.inner{max-width:1180px;margin:0 auto;padding:0 52px;}
+.section-alt{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+
+.s-eye{
+  font-family:var(--mono);
+  font-size:11px;font-weight:500;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--accent);margin-bottom:16px;
+}
+
+.s-h{
+  font-family:var(--display);
+  font-size:clamp(34px,4vw,56px);
+  font-weight:800;letter-spacing:-2px;
+  line-height:1.05;margin-bottom:20px;
+}
+.s-h em{
+  font-family:var(--serif);
+  font-style:italic;font-weight:400;
+  color:var(--accent2);letter-spacing:-1px;
+}
+
+.s-desc{
+  font-size:17px;color:var(--muted);
+  max-width:520px;line-height:1.75;
+  margin-bottom:56px;font-weight:400;
+}
+
+/* ── problem ── */
+.prob-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+.prob-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:20px;padding:36px;
+  position:relative;overflow:hidden;
+  transition:all 0.3s;
+  cursor:default;
+}
+.prob-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--red),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.prob-card:hover{border-color:rgba(255,95,87,0.2);transform:translateY(-4px);}
+.prob-card:hover::before{opacity:1;}
+.prob-num{
+  font-family:var(--display);
+  font-size:80px;font-weight:800;
+  color:rgba(255,95,87,0.06);
+  line-height:1;position:absolute;
+  top:20px;right:24px;
+  transition:color 0.3s;
+  letter-spacing:-4px;
+}
+.prob-card:hover .prob-num{color:rgba(255,95,87,0.12);}
+.prob-icon{
+  width:44px;height:44px;
+  border-radius:10px;
+  background:rgba(255,95,87,0.08);
+  border:1px solid rgba(255,95,87,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:20px;
+}
+.prob-card h3{
+  font-size:18px;font-weight:700;
+  margin-bottom:10px;letter-spacing:-0.3px;
+}
+.prob-card p{font-size:14px;color:var(--muted);line-height:1.65;}
+
+/* ── solution flow ── */
+.flow-row{
+  display:flex;align-items:stretch;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:20px;overflow:hidden;
+  margin-bottom:20px;
+}
+.flow-s{
+  flex:1;padding:32px 24px;
+  border-right:1px solid var(--border);
+  text-align:center;position:relative;
+  transition:background 0.2s;
+}
+.flow-s:last-child{border-right:none;}
+.flow-s:hover{background:rgba(255,255,255,0.02);}
+.flow-circle{
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(91,143,255,0.1);
+  border:1px solid rgba(91,143,255,0.25);
+  color:var(--accent2);
+  font-size:14px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;
+}
+.flow-emoji{font-size:24px;margin-bottom:10px;}
+.flow-s h4{font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:-0.2px;}
+.flow-s p{font-size:12px;color:var(--muted);line-height:1.5;}
+
+/* ── three pillars ── */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.pillar{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:20px;padding:36px;
+  position:relative;overflow:hidden;
+  transition:all 0.3s;
+}
+.pillar::after{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--lime));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.35s ease;
+}
+.pillar:hover{border-color:var(--border2);transform:translateY(-5px);}
+.pillar:hover::after{transform:scaleX(1);}
+.p-icon{
+  font-size:28px;margin-bottom:20px;
+  display:block;
+}
+.pillar h3{font-size:18px;font-weight:700;margin-bottom:10px;letter-spacing:-0.3px;}
+.pillar p{font-size:14px;color:var(--muted);line-height:1.65;}
+
+/* ── WhatsApp demo ── */
+.demo-wrap{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:24px;margin-top:0;align-items:start;
+}
+.demo-phone{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:24px;overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,0.4);
+}
+.phone-top{
+  background:var(--bg2);
+  padding:16px 20px 14px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+}
+.phone-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--lime));
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+}
+.phone-name{font-size:14px;font-weight:600;}
+.phone-status{font-size:11px;color:var(--lime);}
+.phone-msgs{padding:20px;display:flex;flex-direction:column;gap:12px;}
+.in-msg{
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);
+  border-radius:4px 14px 14px 14px;
+  padding:10px 14px;
+  font-size:13px;color:var(--text);
+  line-height:1.5;max-width:80%;
+}
+.ai-card{
+  background:rgba(91,143,255,0.07);
+  border:1px solid rgba(91,143,255,0.18);
+  border-radius:14px;padding:16px;
+  margin:4px 0;
+}
+.ai-header{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:12px;
+}
+.ai-chip{
+  background:rgba(91,143,255,0.15);
+  border:1px solid rgba(91,143,255,0.3);
+  color:var(--accent2);
+  font-family:var(--mono);
+  font-size:10px;font-weight:500;
+  padding:3px 8px;border-radius:4px;
+  letter-spacing:0.5px;
+}
+.intent-chip{
+  background:rgba(182,245,66,0.1);
+  border:1px solid rgba(182,245,66,0.25);
+  color:var(--lime);
+  font-size:11px;font-weight:700;
+  padding:3px 10px;border-radius:20px;
+}
+.suggest{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:14px;}
+.action-row{display:flex;gap:8px;}
+.a-approve{
+  flex:2;padding:9px;border-radius:8px;
+  background:var(--lime);color:#07080d;
+  font-size:12px;font-weight:700;
+  text-align:center;cursor:pointer;
+  border:none;font-family:var(--display);
+  transition:all 0.2s;
+}
+.a-approve:hover{background:var(--lime2);}
+.a-edit,.a-skip{
+  flex:1;padding:9px;border-radius:8px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);
+  color:var(--muted);font-size:12px;font-weight:500;
+  text-align:center;cursor:pointer;
+  font-family:var(--display);
+}
+
+.demo-right{display:flex;flex-direction:column;gap:14px;padding-top:8px;}
+.dr-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;padding:24px;
+  transition:all 0.2s;
+}
+.dr-card:hover{border-color:var(--border2);}
+.dr-label{
+  font-family:var(--mono);
+  font-size:10px;color:var(--faint);
+  letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:10px;
+}
+.dr-stat{
+  font-family:var(--display);
+  font-size:36px;font-weight:800;
+  letter-spacing:-1.5px;line-height:1;
+  margin-bottom:4px;
+}
+.dr-stat .unit{font-size:18px;color:var(--muted);font-weight:400;}
+.dr-note{font-size:13px;color:var(--muted);}
+.pipeline-row{display:flex;flex-direction:column;gap:8px;}
+.pl-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 14px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);
+  border-radius:8px;font-size:13px;
+}
+.pl-name{color:var(--text);font-weight:500;}
+.pl-badge{
+  font-size:11px;font-weight:600;
+  padding:2px 8px;border-radius:20px;
+}
+.pl-new{background:rgba(91,143,255,0.12);color:var(--accent2);}
+.pl-hot{background:rgba(182,245,66,0.1);color:var(--lime);}
+.pl-wait{background:rgba(255,189,46,0.1);color:#ffbd2e;}
+
+/* ── cta ── */
+.cta-wrap{
+  padding:120px 52px;
+  text-align:center;
+  position:relative;z-index:1;
+  max-width:1180px;margin:0 auto;
+}
+.cta-super{
+  font-family:var(--display);
+  font-size:clamp(52px,7vw,100px);
+  font-weight:800;letter-spacing:-4px;
+  line-height:0.95;margin-bottom:32px;
+}
+.cta-super .outline{
+  -webkit-text-stroke:1px rgba(255,255,255,0.2);
+  color:transparent;
+}
+.cta-sub{font-size:18px;color:var(--muted);margin-bottom:40px;font-weight:400;}
+.cta-email{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:14px;color:var(--accent2);
+  margin-top:20px;
+}
+
+/* ── footer ── */
+footer{
+  border-top:1px solid var(--border);
+  padding:28px 52px;
+  display:flex;justify-content:space-between;align-items:center;
+  position:relative;z-index:1;
+  background:var(--bg2);
+}
+.f-logo{font-weight:800;font-size:16px;letter-spacing:-0.3px;}
+.f-logo span{color:var(--lime);}
+footer p{font-size:12px;color:var(--faint);}
+
+/* ── animations ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;}}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.visible{opacity:1;transform:none;}
+.reveal-d1{transition-delay:0.1s;}
+.reveal-d2{transition-delay:0.2s;}
+.reveal-d3{transition-delay:0.3s;}
+
+@media(max-width:900px){
+  nav{padding:14px 20px;}
+  .hero{padding:110px 20px 60px;}
+  .hero-visual{display:none;}
+  .hero-h1{letter-spacing:-2px;}
+  .inner{padding:0 20px;}
+  .prob-layout{grid-template-columns:1fr;}
+  .pillars{grid-template-columns:1fr;}
+  .flow-row{flex-direction:column;}
+  .flow-s{border-right:none;border-bottom:1px solid var(--border);}
+  .flow-s:last-child{border-bottom:none;}
+  .demo-wrap{grid-template-columns:1fr;}
+  .cta-wrap{padding:80px 20px;}
+  .cta-super{letter-spacing:-2px;}
+  footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">
+    <div class="logo-dot"></div>
+    BizPilot
+  </div>
+  <a href="#contact" class="nav-pill">Get early access →</a>
+</nav>
+
+<!-- Hero -->
+<section style="position:relative;z-index:1;">
+  <div class="hero">
+    <div class="hero-eyebrow">AI Operations Platform — Now in Pilot</div>
+    <h1 class="hero-h1">
+      Your business<br/>
+      <span class="outline">runs</span> <span class="italic">itself.</span>
+    </h1>
+    <p class="hero-body">BizPilot captures every customer message across WhatsApp, email and phone calls — classifies what they want with AI — and lets you respond in one tap. No lead ever gets lost.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-lime">Request early access →</a>
+      <a href="#problem" class="btn-outline">See how it works</a>
+    </div>
+
+    <!-- Mockup -->
+    <div class="hero-visual">
+      <div class="mockup-window">
+        <div class="mockup-bar">
+          <div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div>
+          <span class="mockup-title">BizPilot — Owner notifications</span>
+        </div>
+        <div class="mockup-body">
+          <div class="wa-msg">
+            <div class="wa-avatar">👤</div>
+            <div>
+              <div class="wa-bubble">bhai 500 HDPE crates ka quote chahiye ASAP — Rahul</div>
+              <div class="wa-time">2:14 PM · via WhatsApp</div>
+            </div>
+          </div>
+          <div class="ai-response">
+            <div class="ai-label"><div class="ai-dot"></div>BizPilot AI</div>
+            <div class="ai-intent">✦ Quote request · High urgency</div>
+            <div class="ai-text" style="margin-top:8px;">Rahul needs a quote for 500 HDPE crates urgently. Suggested reply ready.</div>
+            <div class="action-btns">
+              <button class="act-btn act-1">✓ Send reply</button>
+              <button class="act-btn act-2">✏ Edit</button>
+              <button class="act-btn act-3">→ Forward</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item"><span>⚡</span>WhatsApp Integration</div>
+    <div class="marquee-item"><span>🧠</span>AI Classification</div>
+    <div class="marquee-item"><span>📊</span>Live Pipeline Dashboard</div>
+    <div class="marquee-item"><span>🔄</span>Auto Follow-ups</div>
+    <div class="marquee-item"><span>📞</span>Call Recording</div>
+    <div class="marquee-item"><span>📧</span>Email Integration</div>
+    <div class="marquee-item"><span>👥</span>Team Delegation</div>
+    <div class="marquee-item"><span>🧾</span>Auto Billing</div>
+    <div class="marquee-item"><span>⚡</span>WhatsApp Integration</div>
+    <div class="marquee-item"><span>🧠</span>AI Classification</div>
+    <div class="marquee-item"><span>📊</span>Live Pipeline Dashboard</div>
+    <div class="marquee-item"><span>🔄</span>Auto Follow-ups</div>
+    <div class="marquee-item"><span>📞</span>Call Recording</div>
+    <div class="marquee-item"><span>📧</span>Email Integration</div>
+    <div class="marquee-item"><span>👥</span>Team Delegation</div>
+    <div class="marquee-item"><span>🧾</span>Auto Billing</div>
+  </div>
+</div>
+
+<!-- Problem -->
+<section id="problem" class="section">
+  <div class="inner">
+    <div class="reveal">
+      <div class="s-eye">The problem</div>
+      <h2 class="s-h">Owners are trapped<br/>in their own <em>inbox.</em></h2>
+      <p class="s-desc">400 million small business owners worldwide spend their days managing messages instead of growing their business. The result? Leads lost. Revenue left on the table. Owners burning out.</p>
+    </div>
+    <div class="prob-layout">
+      <div class="prob-card reveal reveal-d1">
+        <div class="prob-num">01</div>
+        <div class="prob-icon">💸</div>
+        <h3>40% of leads go unanswered</h3>
+        <p>Inquiries pour in from WhatsApp, email, and phone simultaneously. Without a unified system, nearly half go unanswered — and the customer moves on.</p>
+      </div>
+      <div class="prob-card reveal reveal-d2">
+        <div class="prob-num">02</div>
+        <div class="prob-icon">⏳</div>
+        <h3>Owner is always the bottleneck</h3>
+        <p>Every quote, approval, and reply waits on one person. Business stops when the owner is in a meeting, offline, or simply overwhelmed.</p>
+      </div>
+      <div class="prob-card reveal reveal-d1">
+        <div class="prob-num">03</div>
+        <div class="prob-icon">👁</div>
+        <h3>Team has zero visibility</h3>
+        <p>Conversations live in personal phones. No one on the team knows what's open, what's been handled, or who owns what.</p>
+      </div>
+      <div class="prob-card reveal reveal-d2">
+        <div class="prob-num">04</div>
+        <div class="prob-icon">🔁</div>
+        <h3>Follow-ups simply never happen</h3>
+        <p>No system. No reminders. Hot leads go cold because everyone assumed someone else would follow up. Revenue quietly disappears.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Solution -->
+<section id="solution" class="section section-alt">
+  <div class="inner">
+    <div class="reveal">
+      <div class="s-eye">The solution</div>
+      <h2 class="s-h">Every message. Every channel.<br/><em>Nothing missed.</em></h2>
+      <p class="s-desc">BizPilot sits between your customers and your team — reading every message, understanding what's needed, and putting the right action in front of the right person instantly.</p>
+    </div>
+
+    <!-- Flow -->
+    <div class="flow-row reveal">
+      <div class="flow-s">
+        <div class="flow-circle">1</div>
+        <div class="flow-emoji">📥</div>
+        <h4>Capture</h4>
+        <p>WhatsApp, email, phone calls — all captured automatically via webhooks</p>
+      </div>
+      <div class="flow-s">
+        <div class="flow-circle">2</div>
+        <div class="flow-emoji">🧠</div>
+        <h4>Classify</h4>
+        <p>AI reads each message and labels intent — inquiry, quote, complaint, booking</p>
+      </div>
+      <div class="flow-s">
+        <div class="flow-circle">3</div>
+        <div class="flow-emoji">🔔</div>
+        <h4>Notify</h4>
+        <p>Owner gets a WhatsApp alert with full context and a suggested reply</p>
+      </div>
+      <div class="flow-s">
+        <div class="flow-circle">4</div>
+        <div class="flow-emoji">✅</div>
+        <h4>Approve</h4>
+        <p>One tap to send, edit, forward, or delegate. System executes instantly.</p>
+      </div>
+      <div class="flow-s">
+        <div class="flow-circle">5</div>
+        <div class="flow-emoji">📊</div>
+        <h4>Track</h4>
+        <p>Full pipeline visible to the whole team. Every lead tracked to close.</p>
+      </div>
+    </div>
+
+    <!-- Demo -->
+    <div class="demo-wrap" style="margin-top:32px;">
+      <div class="demo-phone reveal">
+        <div class="phone-top">
+          <div class="phone-avatar">B</div>
+          <div>
+            <div class="phone-name">BizPilot</div>
+            <div class="phone-status">● AI active</div>
+          </div>
+        </div>
+        <div class="phone-msgs">
+          <div class="in-msg">📱 New message from Rahul (+91 98765...)<br/><span style="color:var(--muted);font-size:12px;">via WhatsApp · 2:14 PM</span></div>
+          <div class="ai-card">
+            <div class="ai-header">
+              <div class="ai-chip">✦ BIZPILOT AI</div>
+              <div class="intent-chip">Quote request</div>
+            </div>
+            <div class="suggest">"Rahul needs a quote for 500 HDPE crates urgently. Suggested: Namaste Rahul bhai! Aapka quote 2 ghante mein bhejte hain."</div>
+            <div class="action-row">
+              <button class="a-approve">✓ Send reply</button>
+              <button class="a-edit">✏ Edit</button>
+              <button class="a-skip">→ Varun</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-right reveal reveal-d1">
+        <div class="dr-card">
+          <div class="dr-label">Today's pipeline</div>
+          <div class="pipeline-row">
+            <div class="pl-item"><span class="pl-name">Rahul Kumar</span><span class="pl-badge pl-hot">Quote req.</span></div>
+            <div class="pl-item"><span class="pl-name">Priya Mehta</span><span class="pl-badge pl-new">New inquiry</span></div>
+            <div class="pl-item"><span class="pl-name">Sunil Agarwal</span><span class="pl-badge pl-wait">Follow-up</span></div>
+            <div class="pl-item"><span class="pl-name">Vikram Singh</span><span class="pl-badge pl-hot">Booking</span></div>
+          </div>
+        </div>
+        <div class="dr-card reveal-d2">
+          <div class="dr-label">Leads captured today</div>
+          <div class="dr-stat">24<span class="unit"> leads</span></div>
+          <div class="dr-note">vs 9 yesterday without BizPilot</div>
+        </div>
+        <div class="dr-card reveal-d3">
+          <div class="dr-label">Response time</div>
+          <div class="dr-stat">&lt;10<span class="unit">s</span></div>
+          <div class="dr-note">Average time from message to owner notification</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pillars -->
+    <div class="pillars" style="margin-top:20px;">
+      <div class="pillar reveal reveal-d1">
+        <span class="p-icon">📱</span>
+        <h3>No new app needed</h3>
+        <p>Owners use the WhatsApp they already have. One tap to approve. Zero learning curve. Zero behavior change.</p>
+      </div>
+      <div class="pillar reveal reveal-d2">
+        <span class="p-icon">📊</span>
+        <h3>Whole team, one view</h3>
+        <p>Every lead and conversation visible to the entire team in real time. No more "I thought you handled that."</p>
+      </div>
+      <div class="pillar reveal reveal-d3">
+        <span class="p-icon">🔄</span>
+        <h3>Leads followed up automatically</h3>
+        <p>AI sends follow-ups to cold leads on its own. The pipeline moves forward without anyone having to remember.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="contact" style="position:relative;z-index:1;">
+  <div class="cta-wrap">
+    <div class="s-eye" style="justify-content:center;display:flex;margin-bottom:20px;">Early access</div>
+    <div class="cta-super reveal">
+      Stop running<br/>
+      your <span class="outline">inbox.</span>
+    </div>
+    <p class="cta-sub reveal">We're onboarding a small group of pilot businesses. Free during pilot. No credit card.</p>
+    <a href="mailto:hello@bizpilot.io" class="btn-lime reveal">Get in touch →</a>
+    <div class="cta-email reveal">
+      <span>or email us directly —</span>
+      <a href="mailto:hello@bizpilot.io" style="color:var(--accent2);text-decoration:none;">hello@bizpilot.io</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-logo">Biz<span>Pilot</span></div>
+  <p>The AI operations layer for small business.</p>
+  <p>© 2026 BizPilot</p>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.07 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
